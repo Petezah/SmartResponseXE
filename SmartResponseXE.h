@@ -21,6 +21,10 @@
 #define LCD_WIDTH 384
 #define LCD_HEIGHT 136
 
+#ifdef _WINDOWS
+typedef uint8_t byte;
+#endif
+
 //
 // Simplified pin numbering scheme uses a hex number to specify the port number
 // and bit. Top 4 bits = port (B/D/E/F/G), bottom 3 bits specify the bit of the port
