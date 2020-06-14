@@ -21,9 +21,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+#ifdef _WINDOWS
+#include <stdint.h>
+#include <string.h>
+#define PROGMEM
+#define memcpy_P memcpy
+#else
 #include <Arduino.h>
 #include <avr/pgmspace.h>
 #include <avr/sleep.h>
+#endif
 #include "SmartResponseXE.h"
 //#include <SPI.h>
 
@@ -203,6 +210,7 @@ const unsigned char ucSmallFont[]PROGMEM = {
   0x4c,0x00,0x00,0x08,0x3e,0x41,0x41,0x00,0x00,0x00,0x00,0x77,0x00,0x00,0x00,0x00,
   0x41,0x41,0x3e,0x08,0x00,0x02,0x01,0x02,0x01,0x00,0x00,0x3c,0x26,0x23,0x26,0x3c};
 
+#ifndef _WINDOWS
 uint8_t getPinInfo(uint8_t pin, volatile uint8_t **iDDR, volatile uint8_t **iPort, int bInput)
 {
   uint8_t port, bit;
@@ -297,12 +305,14 @@ ISR (INT2_vect)
   // cancel sleep as a precaution
   sleep_disable();
 } 
+#endif
 //
 // Put the device in a deep sleep to save power
 // Wakes up when pressing the "power" button
 //
 void SRXESleep(void)
 {
+#ifndef _WINDOWS
   // Turn off the LCD
   SRXEPowerDown();
 
@@ -331,8 +341,10 @@ void SRXESleep(void)
   // interrupts are turned on.
   sleep_cpu ();   // one cycle
   SRXEPowerUp();
+#endif
 } /* SRXESleep() */
 
+#ifndef _WINDOWS
 //
 // Initialize SPI using direct register access
 //
@@ -570,6 +582,8 @@ byte bTemp[128];
       SRXEWriteDataBlock(bTemp, cy);
    }
 } /* SRXERectangle() */
+#endif
+
 //
 // Draw a string of normal (8x8), small (6x8) or large (16x24) characters
 // At the given col+row
@@ -743,6 +757,7 @@ byte fgColor0, fgColor1, fgColor2, bgColor;
   return 0;
 } /* SRXEWriteString() */
 
+#ifndef _WINDOWS
 // Fill the frame buffer with a byte pattern
 // e.g. all off (0x00) or all on (0xff)
 void SRXEFill(byte ucData)
@@ -970,4 +985,4 @@ byte bKey = 0;
    } // for iCol
    return bKey; // 0 if no keys pressed
 } /* SRXEGetKey() */
-
+#endif
