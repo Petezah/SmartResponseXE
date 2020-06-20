@@ -21,10 +21,6 @@
 #define LCD_WIDTH 384
 #define LCD_HEIGHT 136
 
-#ifdef _WINDOWS
-typedef uint8_t byte;
-#endif
-
 //
 // Simplified pin numbering scheme uses a hex number to specify the port number
 // and bit. Top 4 bits = port (B/D/E/F/G), bottom 3 bits specify the bit of the port
@@ -73,6 +69,10 @@ void SRXEScroll(int iLines);
 // Reset the scroll position to 0
 //
 void SRXEScrollReset(void);
+
+void SRXEHorizontalLine(int x, int y, int length,byte color,int thickness);
+void SRXEVerticalLine(int x, int y, int height,byte color);
+
 //
 // Draw an outline or filled rectangle
 // Only draws on byte boundaries (3 pixels wide)
