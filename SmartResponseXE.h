@@ -79,11 +79,15 @@ void SRXEVerticalLine(int x, int y, int height,byte color);
 // (display is treated as 128x136)
 //
 void SRXERectangle(int x, int y, int cx, int cy, byte color, byte bFilled);
+
+#ifdef ENABLE_SRXE_FONTS
 //
 // Draw a string of normal (9x8), small (6x8) or large (15x16) characters
 // At the given col+row
 //
 int SRXEWriteString(int x, int y, char *szMsg, int iSize, int iFGColor, int iBGColor);
+#endif
+
 // Fill the frame buffer with a byte pattern
 // e.g. all off (0x00) or all on (0xff)
 void SRXEFill(byte ucData);
@@ -123,4 +127,3 @@ int SRXEFlashWritePage(uint32_t ulAddr, uint8_t *pSrc);
 int SRXEFlashRead(uint32_t ulAddr, uint8_t *pDest, int iLen);
 
 #endif // __SMART_RESPONSE_XE__
-

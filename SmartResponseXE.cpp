@@ -21,9 +21,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+#ifndef __AVR__
+#include <stdint.h>
+using byte = uint8_t;
+#define PROGMEM
+#else
 #include <Arduino.h>
 #include <avr/pgmspace.h>
 #include <avr/sleep.h>
+#endif
 #include "SmartResponseXE.h"
 //#include <SPI.h>
 
@@ -97,7 +103,7 @@ byte SymKeys[] =       {'!','2','3','$','%','6','\'','\"','(',')',
 //
 // Power on the LCD
 //
-const char powerup[] PROGMEM = {
+const unsigned char powerup[] PROGMEM = {
 1, 0x01, // soft reset
 99, 120, // 120ms delay
 1, 0x11,  // sleep out
@@ -118,6 +124,7 @@ const char powerup[] PROGMEM = {
 1, 0x29, // Display ON
 0};
 
+#ifdef ENABLE_SRXE_FONTS
 // small font
 const byte ucFont[]PROGMEM = {
   0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x06,0x5f,0x5f,0x06,0x00,0x00,
@@ -207,7 +214,9 @@ const unsigned char ucSmallFont[]PROGMEM = {
   0x00,0x6c,0x10,0x10,0x6c,0x00,0x00,0x9c,0xa0,0x60,0x3c,0x00,0x00,0x64,0x54,0x54,
   0x4c,0x00,0x00,0x08,0x3e,0x41,0x41,0x00,0x00,0x00,0x00,0x77,0x00,0x00,0x00,0x00,
   0x41,0x41,0x3e,0x08,0x00,0x02,0x01,0x02,0x01,0x00,0x00,0x3c,0x26,0x23,0x26,0x3c};
+#endif
 
+#ifdef __AVR__
 uint8_t getPinInfo(uint8_t pin, volatile uint8_t **iDDR, volatile uint8_t **iPort, int bInput)
 {
   uint8_t port, bit;
@@ -602,6 +611,7 @@ byte bTemp[128];
       SRXEWriteDataBlock(bTemp, cy);
    }
 } /* SRXERectangle() */
+#ifdef ENABLE_SRXE_FONTS
 //
 // Draw a string of normal (8x8), small (6x8) or large (16x24) characters
 // At the given col+row
@@ -774,6 +784,7 @@ byte fgColor0, fgColor1, fgColor2, bgColor;
    } // small
   return 0;
 } /* SRXEWriteString() */
+#endif
 
 // Fill the frame buffer with a byte pattern
 // e.g. all off (0x00) or all on (0xff)
@@ -1002,4 +1013,4 @@ byte bKey = 0;
    } // for iCol
    return bKey; // 0 if no keys pressed
 } /* SRXEGetKey() */
-
+#endif // __AVR__
