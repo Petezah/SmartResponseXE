@@ -845,19 +845,20 @@ int SRXEFlashEraseSector(uint32_t ulAddr, int bWait)
   {
     rc = 1;
     timeout = 0;
+    mydigitalWrite(CS_FLASH, LOW);
     while (rc & 1)
     {
-      mydigitalWrite(CS_FLASH, LOW);
       SPI_transfer(0x05); // read status register
       rc = SPI_transfer(0);
-      mydigitalWrite(CS_FLASH, HIGH);
       delay(1);
       timeout++;
       if (timeout >= 120) // took too long, bail out
       {
+        mydigitalWrite(CS_FLASH, HIGH);
         return 0;
       }
     }
+    mydigitalWrite(CS_FLASH, HIGH);
   } // if asked to wait
   return 1;
 } /* SRXEFlashEraseSector() */
@@ -905,19 +906,20 @@ int SRXEFlashWritePage(uint32_t ulAddr, uint8_t *pSrc)
   // wait for the write to complete
   rc = 1;
   timeout = 0;
+  mydigitalWrite(CS_FLASH, LOW);
   while (rc & 1)
   {
-    mydigitalWrite(CS_FLASH, LOW);
     SPI_transfer(0x05); // read status register
     rc = SPI_transfer(0);
-    mydigitalWrite(CS_FLASH, HIGH);
     delay(1);
     timeout++;
     if (timeout >= 20) // took too long, bail out
     {
+      mydigitalWrite(CS_FLASH, HIGH);
       return 0;
     }
   }
+  mydigitalWrite(CS_FLASH, HIGH);
   return 1;
 } /* SRXEFlashWritePage() */
 //

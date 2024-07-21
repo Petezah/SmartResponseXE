@@ -127,3 +127,4 @@ int SRXEFlashWritePage(uint32_t ulAddr, uint8_t *pSrc);
 int SRXEFlashRead(uint32_t ulAddr, uint8_t *pDest, int iLen);
 
 #endif // __SMART_RESPONSE_XE__
+
